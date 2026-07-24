@@ -1,0 +1,511 @@
+{% extends "layout.html" %}
+
+{% block title %}Model Showdown - MatchPredict{% endblock %}
+
+{% block page_title %}
+<h1>Model Showdown</h1>
+<p>Random Forest vs Poisson Model Comparison</p>
+{% endblock %}
+
+{% block topbar_meta %}
+<div class="topbar-meta">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+  <div>
+    <div class="meta-title">Test Season</div>
+    <div class="meta-sub">{{ model_results.test_season }}</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<!-- Winner Banner -->
+{% if model_results.random_forest.accuracy > model_results.poisson.accuracy %}
+<div class="winner-banner winner-rf">
+  <div class="winner-icon">🏆</div>
+  <div class="winner-text">
+    <div class="winner-title">Random Forest Wins</div>
+    <div class="winner-sub">{{ (model_results.random_forest.accuracy - model_results.poisson.accuracy) | round(1) }}% better accuracy</div>
+  </div>
+</div>
+{% elif model_results.poisson.accuracy > model_results.random_forest.accuracy %}
+<div class="winner-banner winner-poisson">
+  <div class="winner-icon">🏆</div>
+  <div class="winner-text">
+    <div class="winner-title">Poisson Wins</div>
+    <div class="winner-sub">{{ (model_results.poisson.accuracy - model_results.random_forest.accuracy) | round(1) }}% better accuracy</div>
+  </div>
+</div>
+{% else %}
+<div class="winner-banner winner-tie">
+  <div class="winner-icon">⚖️</div>
+  <div class="winner-text">
+    <div class="winner-title">It's a Tie</div>
+    <div class="winner-sub">Both models perform equally</div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Stats Overview -->
+<div class="stats-overview">
+  <div class="stat-card stat-rf">
+    <div class="stat-card-top">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-label">Random Forest</div>
+    </div>
+    <div class="stat-value-row">
+      <div class="stat-value">{{ model_results.random_forest.accuracy }}%</div>
+    </div>
+    <div class="stat-sub">{{ model_results.random_forest.correct_predictions }}/{{ model_results.random_forest.total_predictions }} correct</div>
+    <div class="stat-gauge-track">
+      <div class="stat-gauge-fill" style="width: {{ model_results.random_forest.accuracy }}%;"></div>
+    </div>
+    <div class="stat-trend">+{{ (model_results.random_forest.accuracy - model_results.poisson.accuracy) | round(1) }}% vs Poisson</div>
+  </div>
+  <div class="stat-card stat-poisson">
+    <div class="stat-card-top">
+      <div class="stat-icon">📊</div>
+      <div class="stat-label">Poisson</div>
+    </div>
+    <div class="stat-value-row">
+      <div class="stat-value">{{ model_results.poisson.accuracy }}%</div>
+    </div>
+    <div class="stat-sub">{{ model_results.poisson.correct_predictions }}/{{ model_results.poisson.total_predictions }} correct</div>
+    <div class="stat-gauge-track">
+      <div class="stat-gauge-fill" style="width: {{ model_results.poisson.accuracy }}%;"></div>
+    </div>
+    <div class="stat-trend">Statistical Model</div>
+  </div>
+</div>
+
+<!-- Charts Section -->
+<div class="charts-section">
+  <div class="charts-grid">
+    <!-- Accuracy Comparison - Doughnut Chart -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div class="chart-card-heading">
+          <div class="chart-title">Model Performance</div>
+          <div class="chart-subtitle">Overall accuracy, side by side</div>
+        </div>
+        <div class="chart-badge">Doughnut</div>
+      </div>
+      <div class="chart-canvas-wrap">
+        <canvas id="accuracyChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Prediction Distribution - Doughnut Chart -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div class="chart-card-heading">
+          <div class="chart-title">Prediction Distribution</div>
+          <div class="chart-subtitle">Random Forest call breakdown</div>
+        </div>
+        <div class="chart-badge">Doughnut</div>
+      </div>
+      <div class="chart-canvas-wrap">
+        <canvas id="distributionChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Accuracy by Result Type - Grouped Bar Chart -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div class="chart-card-heading">
+          <div class="chart-title">Accuracy by Result Type</div>
+          <div class="chart-subtitle">Home / Draw / Away accuracy</div>
+        </div>
+        <div class="chart-badge">Grouped Bar</div>
+      </div>
+      <div class="chart-canvas-wrap">
+        <canvas id="accuracyByTypeChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Matchweek Performance - Line Chart -->
+    <div class="chart-card chart-card--tall">
+      <div class="chart-card-header">
+        <div class="chart-card-heading">
+          <div class="chart-title">Performance by Matchweek</div>
+          <div class="chart-subtitle">Accuracy trend across the season</div>
+        </div>
+        <div class="chart-badge">Line</div>
+      </div>
+      <div class="chart-canvas-wrap">
+        <canvas id="matchweekChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Detailed Stats -->
+<div class="detailed-stats">
+  <div class="section-title-row">
+    <div class="section-title">Detailed Statistics</div>
+    <div class="legend-inline">
+      <div class="legend-inline-item"><span class="legend-dot legend-dot-rf"></span>Random Forest</div>
+      <div class="legend-inline-item"><span class="legend-dot legend-dot-poisson"></span>Poisson</div>
+    </div>
+  </div>
+
+  {% set max_total = [model_results.random_forest.total_predictions, model_results.poisson.total_predictions] | max %}
+
+  <div class="compare-table">
+    <div class="compare-row">
+      <div class="compare-label">Overall Accuracy</div>
+      <div class="compare-bars">
+        <div class="compare-bar-item">
+          <div class="compare-bar-name">RF</div>
+          <div class="compare-bar-track"><div class="compare-bar-fill compare-bar-fill--rf" style="width: {{ model_results.random_forest.accuracy }}%;"></div></div>
+          <div class="compare-bar-value">{{ model_results.random_forest.accuracy }}%</div>
+        </div>
+        <div class="compare-bar-item">
+          <div class="compare-bar-name">Poisson</div>
+          <div class="compare-bar-track"><div class="compare-bar-fill compare-bar-fill--poisson" style="width: {{ model_results.poisson.accuracy }}%;"></div></div>
+          <div class="compare-bar-value">{{ model_results.poisson.accuracy }}%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-row">
+      <div class="compare-label">Home Win Accuracy</div>
+      <div class="compare-bars">
+        <div class="compare-bar-item">
+          <div class="compare-bar-name">RF</div>
+          <div class="compare-bar-track"><div class="compare-bar-fill compare-bar-fill--rf" style="width: {{ model_results.random_forest.accuracy_by_type.H }}%;"></div></div>
+          <div class="compare-bar-value">{{ model_results.random_forest.accuracy_by_type.H }}%</div>
+        </div>
+        <div class="compare-bar-item">
+          <div class="compare-bar-name">Poisson</div>
+          <div class="compare-bar-track"><div class="compare-bar-fill compare-bar-fill--poisson" style="width: {{ model_results.poisson.accuracy_by_type.H }}%;"></div></div>
+          <div class="compare-bar-value">{{ model_results.poisson.accuracy_by_type.H }}%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-row">
+      <div class="compare-label">Draw Accuracy</div>
+      <div class="compare-bars">
+        <div class="compare-bar-item">
+          <div class="compare-bar-name">RF</div>
+          <div class="compare-bar-track"><div class="compare-bar-fill compare-bar-fill--rf" style="width: {{ model_results.random_forest.accuracy_by_type.D }}%;"></div></div>
+          <div class="compare-bar-value">{{ model_results.random_forest.accuracy_by_type.D }}%</div>
+        </div>
+        <div class="compare-bar-item">
+          <div class="compare-bar-name">Poisson</div>
+          <div class="compare-bar-track"><div class="compare-bar-fill compare-bar-fill--poisson" style="width: {{ model_results.poisson.accuracy_by_type.D }}%;"></div></div>
+          <div class="compare-bar-value">{{ model_results.poisson.accuracy_by_type.D }}%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-row">
+      <div class="compare-label">Away Win Accuracy</div>
+      <div class="compare-bars">
+        <div class="compare-bar-item">
+          <div class="compare-bar-name">RF</div>
+          <div class="compare-bar-track"><div class="compare-bar-fill compare-bar-fill--rf" style="width: {{ model_results.random_forest.accuracy_by_type.A }}%;"></div></div>
+          <div class="compare-bar-value">{{ model_results.random_forest.accuracy_by_type.A }}%</div>
+        </div>
+        <div class="compare-bar-item">
+          <div class="compare-bar-name">Poisson</div>
+          <div class="compare-bar-track"><div class="compare-bar-fill compare-bar-fill--poisson" style="width: {{ model_results.poisson.accuracy_by_type.A }}%;"></div></div>
+          <div class="compare-bar-value">{{ model_results.poisson.accuracy_by_type.A }}%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-row">
+      <div class="compare-label">Total Predictions</div>
+      <div class="compare-bars">
+        <div class="compare-bar-item">
+          <div class="compare-bar-name">RF</div>
+          <div class="compare-bar-track"><div class="compare-bar-fill compare-bar-fill--rf" style="width: {{ (model_results.random_forest.total_predictions / max_total * 100) | round(1) }}%;"></div></div>
+          <div class="compare-bar-value">{{ model_results.random_forest.total_predictions }}</div>
+        </div>
+        <div class="compare-bar-item">
+          <div class="compare-bar-name">Poisson</div>
+          <div class="compare-bar-track"><div class="compare-bar-fill compare-bar-fill--poisson" style="width: {{ (model_results.poisson.total_predictions / max_total * 100) | round(1) }}%;"></div></div>
+          <div class="compare-bar-value">{{ model_results.poisson.total_predictions }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Chart.js global defaults
+Chart.defaults.color = '#9ca3af';
+Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+
+// Accuracy Comparison - Doughnut Chart
+const accuracyCtx = document.getElementById('accuracyChart').getContext('2d');
+new Chart(accuracyCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Random Forest', 'Poisson'],
+    datasets: [{
+      data: [{{ model_results.random_forest.accuracy }}, {{ model_results.poisson.accuracy }}],
+      backgroundColor: ['rgba(34, 211, 238, 0.8)', 'rgba(195, 230, 53, 0.8)'],
+      borderColor: ['rgba(34, 211, 238, 1)', 'rgba(195, 230, 53, 1)'],
+      borderWidth: 3,
+      hoverOffset: 10
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '60%',
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          padding: 16,
+          font: { size: 13, weight: '600' }
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.label + ': ' + context.raw + '%';
+          }
+        }
+      }
+    }
+  }
+});
+
+// Prediction Distribution - Doughnut Chart
+const distributionCtx = document.getElementById('distributionChart').getContext('2d');
+new Chart(distributionCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Home Win', 'Draw', 'Away Win'],
+    datasets: [{
+      data: [{{ model_results.random_forest.prediction_distribution.H }}, {{ model_results.random_forest.prediction_distribution.D }}, {{ model_results.random_forest.prediction_distribution.A }}],
+      backgroundColor: ['rgba(34, 211, 238, 0.8)', 'rgba(195, 230, 53, 0.8)', 'rgba(236, 72, 153, 0.8)'],
+      borderColor: ['rgba(34, 211, 238, 1)', 'rgba(195, 230, 53, 1)', 'rgba(236, 72, 153, 1)'],
+      borderWidth: 3,
+      hoverOffset: 10
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '50%',
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          padding: 12,
+          font: { size: 12 }
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.label + ': ' + context.raw + ' predictions';
+          }
+        }
+      }
+    }
+  }
+});
+
+// Accuracy by Result Type - Grouped Bar Chart
+const accuracyByTypeCtx = document.getElementById('accuracyByTypeChart').getContext('2d');
+new Chart(accuracyByTypeCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Home Win', 'Draw', 'Away Win'],
+    datasets: [
+      {
+        label: 'Random Forest',
+        data: [
+          {{ model_results.random_forest.accuracy_by_type.H }},
+          {{ model_results.random_forest.accuracy_by_type.D }},
+          {{ model_results.random_forest.accuracy_by_type.A }}
+        ],
+        backgroundColor: 'rgba(34, 211, 238, 0.8)',
+        borderColor: 'rgba(34, 211, 238, 1)',
+        borderWidth: 2,
+        borderRadius: 6
+      },
+      {
+        label: 'Poisson',
+        data: [
+          {{ model_results.poisson.accuracy_by_type.H }},
+          {{ model_results.poisson.accuracy_by_type.D }},
+          {{ model_results.poisson.accuracy_by_type.A }}
+        ],
+        backgroundColor: 'rgba(195, 230, 53, 0.8)',
+        borderColor: 'rgba(195, 230, 53, 1)',
+        borderWidth: 2,
+        borderRadius: 6
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100,
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)'
+        },
+        ticks: {
+          color: 'rgba(255, 255, 255, 0.7)',
+          callback: function(value) {
+            return value + '%';
+          }
+        }
+      },
+      x: {
+        grid: {
+          display: false
+        },
+        ticks: {
+          color: 'rgba(255, 255, 255, 0.7)',
+          font: { weight: '600' }
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          padding: 12,
+          font: { size: 12 },
+          boxWidth: 14
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.dataset.label + ': ' + context.raw + '%';
+          }
+        }
+      }
+    }
+  }
+});
+
+// Matchweek Performance - Line Chart
+const matchweekCtx = document.getElementById('matchweekChart').getContext('2d');
+const rfMatchweekData = {{ model_results.random_forest.matchweek_stats | tojson }};
+const poissonMatchweekData = {{ model_results.poisson.matchweek_stats | tojson }};
+
+console.log('RF Matchweek Data:', rfMatchweekData);
+console.log('Poisson Matchweek Data:', poissonMatchweekData);
+
+const matchweeks = Object.keys(rfMatchweekData).sort((a, b) => parseInt(a) - parseInt(b));
+console.log('Matchweeks:', matchweeks);
+
+const rfMatchweekAccuracy = matchweeks.map(mw => {
+  const data = rfMatchweekData[mw];
+  if (data && data.total > 0) {
+    return ((data.correct / data.total) * 100).toFixed(1);
+  }
+  return 0;
+});
+
+const poissonMatchweekAccuracy = matchweeks.map(mw => {
+  const data = poissonMatchweekData[mw];
+  if (data && data.total > 0) {
+    return ((data.correct / data.total) * 100).toFixed(1);
+  }
+  return 0;
+});
+
+// Use global Poisson accuracy for baseline (47.63%)
+const poissonGlobalAccuracy = {{ model_results.poisson.accuracy }};
+const poissonBaseline = matchweeks.map(() => poissonGlobalAccuracy.toFixed(1));
+
+console.log('RF Accuracy:', rfMatchweekAccuracy);
+console.log('Poisson Accuracy:', poissonMatchweekAccuracy);
+console.log('Poisson Baseline:', poissonBaseline);
+
+if (matchweeks.length === 0) {
+  console.error('No matchweek data available');
+}
+
+new Chart(matchweekCtx, {
+  type: 'line',
+  data: {
+    labels: matchweeks.map(mw => 'GW ' + mw),
+    datasets: [
+      {
+        label: 'Random Forest',
+        data: rfMatchweekAccuracy,
+        borderColor: 'rgba(34, 211, 238, 1)',
+        backgroundColor: 'rgba(34, 211, 238, 0.1)',
+        borderWidth: 3,
+        tension: 0.4,
+        fill: true,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: 'rgba(34, 211, 238, 1)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2
+      },
+      {
+        label: 'Poisson (Baseline)',
+        data: poissonBaseline,
+        borderColor: 'rgba(195, 230, 53, 0.6)',
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderDash: [8, 4],
+        tension: 0,
+        fill: false,
+        pointRadius: 0,
+        pointHoverRadius: 0
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+      intersect: false,
+      mode: 'index'
+    },
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          padding: 12,
+          font: { size: 12 }
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.dataset.label + ': ' + context.raw + '%';
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100,
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)'
+        }
+      },
+      x: {
+        grid: {
+          display: false
+        }
+      }
+    }
+  }
+});
+</script>
+{% endblock %}

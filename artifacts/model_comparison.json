@@ -1,0 +1,356 @@
+{
+  "poisson": {
+    "accuracy": 46.58,
+    "predictions": 380,
+    "model_type": "Poisson Distribution",
+    "correct_predictions": 177,
+    "total_predictions": 380,
+    "prediction_distribution": {
+      "H": 219,
+      "D": 0,
+      "A": 161
+    },
+    "actual_distribution": {
+      "H": 162,
+      "D": 104,
+      "A": 114
+    },
+    "accuracy_by_type": {
+      "H": 71.6,
+      "D": 0.0,
+      "A": 53.51
+    },
+    "matchweek_stats": {
+      "1": {
+        "correct": 5,
+        "total": 10
+      },
+      "2": {
+        "correct": 6,
+        "total": 10
+      },
+      "3": {
+        "correct": 4,
+        "total": 10
+      },
+      "4": {
+        "correct": 6,
+        "total": 10
+      },
+      "5": {
+        "correct": 3,
+        "total": 10
+      },
+      "6": {
+        "correct": 4,
+        "total": 10
+      },
+      "7": {
+        "correct": 8,
+        "total": 10
+      },
+      "8": {
+        "correct": 3,
+        "total": 10
+      },
+      "9": {
+        "correct": 6,
+        "total": 10
+      },
+      "10": {
+        "correct": 5,
+        "total": 10
+      },
+      "11": {
+        "correct": 6,
+        "total": 10
+      },
+      "12": {
+        "correct": 4,
+        "total": 10
+      },
+      "13": {
+        "correct": 6,
+        "total": 10
+      },
+      "14": {
+        "correct": 4,
+        "total": 10
+      },
+      "15": {
+        "correct": 4,
+        "total": 10
+      },
+      "16": {
+        "correct": 5,
+        "total": 10
+      },
+      "17": {
+        "correct": 7,
+        "total": 10
+      },
+      "18": {
+        "correct": 6,
+        "total": 10
+      },
+      "19": {
+        "correct": 2,
+        "total": 10
+      },
+      "20": {
+        "correct": 5,
+        "total": 10
+      },
+      "21": {
+        "correct": 2,
+        "total": 10
+      },
+      "22": {
+        "correct": 2,
+        "total": 10
+      },
+      "23": {
+        "correct": 3,
+        "total": 10
+      },
+      "24": {
+        "correct": 6,
+        "total": 10
+      },
+      "25": {
+        "correct": 5,
+        "total": 10
+      },
+      "26": {
+        "correct": 4,
+        "total": 10
+      },
+      "27": {
+        "correct": 4,
+        "total": 10
+      },
+      "28": {
+        "correct": 6,
+        "total": 10
+      },
+      "29": {
+        "correct": 6,
+        "total": 10
+      },
+      "30": {
+        "correct": 3,
+        "total": 10
+      },
+      "31": {
+        "correct": 3,
+        "total": 10
+      },
+      "32": {
+        "correct": 3,
+        "total": 10
+      },
+      "33": {
+        "correct": 5,
+        "total": 10
+      },
+      "34": {
+        "correct": 8,
+        "total": 10
+      },
+      "35": {
+        "correct": 5,
+        "total": 10
+      },
+      "36": {
+        "correct": 4,
+        "total": 10
+      },
+      "37": {
+        "correct": 5,
+        "total": 10
+      },
+      "38": {
+        "correct": 4,
+        "total": 10
+      }
+    }
+  },
+  "random_forest": {
+    "accuracy": 53.42,
+    "predictions": 380,
+    "model_type": "Random Forest Classifier",
+    "correct_predictions": 203,
+    "total_predictions": 380,
+    "prediction_distribution": {
+      "H": 169,
+      "D": 65,
+      "A": 146
+    },
+    "actual_distribution": {
+      "H": 162,
+      "D": 104,
+      "A": 114
+    },
+    "accuracy_by_type": {
+      "H": 67.9,
+      "D": 21.15,
+      "A": 62.28
+    },
+    "matchweek_stats": {
+      "1": {
+        "correct": 6,
+        "total": 10
+      },
+      "2": {
+        "correct": 4,
+        "total": 10
+      },
+      "3": {
+        "correct": 6,
+        "total": 10
+      },
+      "4": {
+        "correct": 5,
+        "total": 10
+      },
+      "5": {
+        "correct": 1,
+        "total": 10
+      },
+      "6": {
+        "correct": 5,
+        "total": 10
+      },
+      "7": {
+        "correct": 7,
+        "total": 10
+      },
+      "8": {
+        "correct": 5,
+        "total": 10
+      },
+      "9": {
+        "correct": 7,
+        "total": 10
+      },
+      "10": {
+        "correct": 6,
+        "total": 10
+      },
+      "11": {
+        "correct": 5,
+        "total": 10
+      },
+      "12": {
+        "correct": 6,
+        "total": 10
+      },
+      "13": {
+        "correct": 9,
+        "total": 10
+      },
+      "14": {
+        "correct": 5,
+        "total": 10
+      },
+      "15": {
+        "correct": 7,
+        "total": 10
+      },
+      "16": {
+        "correct": 6,
+        "total": 10
+      },
+      "17": {
+        "correct": 6,
+        "total": 10
+      },
+      "18": {
+        "correct": 7,
+        "total": 10
+      },
+      "19": {
+        "correct": 3,
+        "total": 10
+      },
+      "20": {
+        "correct": 6,
+        "total": 10
+      },
+      "21": {
+        "correct": 4,
+        "total": 10
+      },
+      "22": {
+        "correct": 3,
+        "total": 10
+      },
+      "23": {
+        "correct": 5,
+        "total": 10
+      },
+      "24": {
+        "correct": 6,
+        "total": 10
+      },
+      "25": {
+        "correct": 7,
+        "total": 10
+      },
+      "26": {
+        "correct": 3,
+        "total": 10
+      },
+      "27": {
+        "correct": 3,
+        "total": 10
+      },
+      "28": {
+        "correct": 6,
+        "total": 10
+      },
+      "29": {
+        "correct": 4,
+        "total": 10
+      },
+      "30": {
+        "correct": 4,
+        "total": 10
+      },
+      "31": {
+        "correct": 9,
+        "total": 10
+      },
+      "32": {
+        "correct": 5,
+        "total": 10
+      },
+      "33": {
+        "correct": 5,
+        "total": 10
+      },
+      "34": {
+        "correct": 6,
+        "total": 10
+      },
+      "35": {
+        "correct": 7,
+        "total": 10
+      },
+      "36": {
+        "correct": 4,
+        "total": 10
+      },
+      "37": {
+        "correct": 5,
+        "total": 10
+      },
+      "38": {
+        "correct": 5,
+        "total": 10
+      }
+    }
+  },
+  "test_season": "25/26",
+  "test_matches": 380
+}

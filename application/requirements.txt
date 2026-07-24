@@ -1,0 +1,27 @@
+# Web framework used by the application layer.
+Flask>=3.0
+
+# Environment variables and configuration management.
+python-dotenv>=1.0.0
+
+# MySQL driver used by src/db/connection.py.
+mysql-connector-python>=9.0
+
+# Core data processing and numerical stack for ETL and feature engineering.
+pandas>=2.0.3
+numpy>=1.26
+scipy>=1.13
+
+# Machine learning toolkit for the Random Forest model.
+scikit-learn>=1.5
+
+# Data download and notebook exploration utilities.
+requests>=2.32
+jupyter>=1.0
+
+# Plotting libraries for notebooks and exploratory analysis.
+matplotlib>=3.9
+seaborn>=0.13
+
+# Test runner for the Python codebase.
+pytest>=8.0
