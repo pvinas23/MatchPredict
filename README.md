@@ -1,5 +1,7 @@
 # MatchPredict
 
+**Note: The web application is best viewed at 50% zoom in your browser for optimal layout.**
+
 Premier League match prediction, end to end: a data pipeline that pulls seven seasons of historical results, a normalised MySQL database, two prediction models evaluated honestly on a held-out season, and a Flask web app with a live predictor and a Monte Carlo season simulator.
 
 Built as the final project for Harvard's **CS50x** (application layer) and **CS50 SQL** (database layer).
