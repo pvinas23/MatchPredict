@@ -133,8 +133,8 @@ Once loaded, `app.py` will pick up MySQL automatically on the next run — no co
 - Fixture list from fixturedownload.com
 - Team's crests from football-logos.cc
 
-AI assistance was used to review and refactor the codebase and documentation, in line with CS50's academic honesty policy on final projects. However, the design, implementation and decisions about the project are my own.
+In line with CS50's academic honesty policy, AI tools were used for technical guidance, code refactoring, and documentation review. Although AI assisted in exploring solutions and optimizing code, the foundational design, database schema, and final implementation decisions were directed by me.
 
 ## License
 
-MIT
+[MIT](LICENSE)
