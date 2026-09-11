@@ -1,0 +1,48 @@
+# Python bytecode, test caches, and static analysis caches
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# Local virtual environments
+.venv/
+venv/
+env/
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+
+# Data files
+application/data/raw/
+application/data/interim/
+application/data/processed/
+!application/data/reference/
+database/data/*.csv
+database/data/*.json
+!database/data/sample_data.sql
+
+# Generated outputs and local runtime state
+# application/artifacts/  # Uncomment if you want to exclude model artifacts
+application/logs/
+application/instance/
+*.db
+*.sqlite
+*.sqlite3
+# *.pkl  # Uncomment if you want to exclude model files
+# *.joblib  # Uncomment if you want to exclude model files
+# *.h5
+
+# Editor and operating-system clutter
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Learning notes (not part of the project)
+notas/

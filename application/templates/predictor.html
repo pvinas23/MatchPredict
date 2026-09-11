@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block title %}Match Predictor - MatchPredict{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 text-center">
+            <div class="construction-card">
+                <div class="construction-icon">🚧</div>
+                <h2 class="construction-title">Under Development</h2>
+                <p class="construction-text">The Match Predictor feature is currently under development and will be available in a few weeks.</p>
+                <div class="construction-divider"></div>
+                <p class="construction-details">This feature will allow you to select any two teams and get real-time predictions using both Random Forest and Poisson models, along with feature importance analysis and head-to-head statistics.</p>
+                <div class="construction-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">⚽</span>
+                        <span>Team Selection</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📊</span>
+                        <span>Real-time Predictions</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📈</span>
+                        <span>Feature Analysis</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📋</span>
+                        <span>Head-to-Head Stats</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.construction-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 40px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    margin: 20px 0;
+}
+
+.construction-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.construction-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.construction-text {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    opacity: 0.95;
+}
+
+.construction-divider {
+    height: 2px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 25px 0;
+}
+
+.construction-details {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 30px;
+}
+
+.construction-features {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 25px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.feature-icon {
+    font-size: 2rem;
+}
+
+.feature-item span:last-child {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+</style>
+{% endblock %}
