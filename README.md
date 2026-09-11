@@ -1,8 +1,5 @@
 # MatchPredict
 
-![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
-![Flask](https://img.shields.io/badge/Flask-3.0+-green.svg)
-![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 > **Note:** The web application is best viewed at 50% zoom in your browser for optimal layout.
 
@@ -18,13 +15,13 @@ The web app currently has two working sections:
 
 The four next upcoming matches with outcome probabilities, the random forest's accuracy, a key match of the next matchday picked by team strength and how balanced the tie is, and the current state of the data pipeline.
 
-<img width="1632" height="722" alt="image" src="https://github.com/user-attachments/assets/57bd40df-3b5b-4c98-bee2-f7ce778da5d2" />
+![Vista del Dashboard](Resources/dashboard.jpg)
 
 ### 2. Model Showdown
 
 Statistics about the accuracy of the random forest and the poisson models while trying to predict the outcome of the matches of the 25/26 season.
 
-<img width="1618" height="889" alt="image" src="https://github.com/user-attachments/assets/d9049eef-0808-4ef6-87dd-250b53fa7f40" />
+![Comparativa de Modelos](Resources/model_showdown.jpg)
 
 ## Coming Later
 
